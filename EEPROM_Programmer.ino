@@ -12,15 +12,17 @@
 #define EEPROM_D0_PIN 5
 #define EEPROM_D7_PIN 12
 #define WRITE_EN_PIN 13
-/**/
-#define EEPROM_ADDRESSES_LENGTH 32768   // 32k (2^15 bit address line)
-
+/* EEPROM Specifications */
+#define EEPROM_ADDRESSES_LENGTH 32768       // 32k (2^15 bit address line)
+// Delay in microseconds
+#define EEPROM_WRITE_LOW_DELAY 1
+#define EEPROM_WRITE_CYCLE_DELAY 5000
 
 
 /* 
-*   Write the 15-bit for the EEPROM address and 1-bit for the EEPROM output enable status to the EEPROM indirectly through the two 8-bit shift registers .
-*  	The 16 bits are written serially to two (8-BIT SHIFT REGISTER WITH 8-BIT OUTPUT REGISTER),
-*   with the 16-bit output from both register connected to the 15-bit address lines of the EEPROM [A0-A14] and the output enable pin [~OE] .
+*	Write the 15-bit for the EEPROM address and 1-bit for the EEPROM output enable status to the EEPROM indirectly through the two 8-bit shift registers .
+*	The 16 bits are written serially to two (8-BIT SHIFT REGISTER WITH 8-BIT OUTPUT REGISTER),
+*	with the 16-bit output from both register connected to the 15-bit address lines of the EEPROM [A0-A14] and the output enable pin [~OE] .
 */
 void setEEPROMAddressAndOutputEnable(uint16_t address, bool EEPROMOutputEnable)
 {
@@ -96,11 +98,11 @@ void writeEEPROM(uint16_t address, byte data)
 	/* Pulse the write enable pin LOW to write the data that is available at the data pins*/
 	digitalWrite(WRITE_EN_PIN, LOW);
 	// Delay to match the EERPOM chip min/max specifications time where the write pin has to be set low to write successfully
-	delayMicroseconds(1);
+	delayMicroseconds(EEPROM_WRITE_LOW_DELAY);
 	// Set the pin back to HIGH
 	digitalWrite(WRITE_EN_PIN, HIGH);
 	// Delay for some time to match the EERPOM chip min time specifications to let the EEPROM compelete the write cycle
-	delay(5);   
+	delayMicroseconds(EEPROM_WRITE_CYCLE_DELAY);   
 }
 
 
