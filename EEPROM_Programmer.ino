@@ -65,13 +65,13 @@ void setEEPROMAddressAndOutputEnable(uint16_t address, bool EEPROMOutputEnable)
 
 
 /*
-*	Write a byte to the EEPROM at the specified address 
+*	Write a byte to the EEPROM at the specified address
 */
 void writeEEPROM(uint16_t address, byte data)
 {
    /*
    *	Set the address where the data will be written in .
-   *	And disable the output enable ( we are writing data not reading ),
+   *	And disable the EEPROM output ( we are writing data not reading ),
    *	otherwise it would result in contention when trying to write to the data lines .
    *
    */
@@ -81,7 +81,7 @@ void writeEEPROM(uint16_t address, byte data)
 	for (int dataPin = EEPROM_D0_PIN; dataPin <= EEPROM_D7_PIN; dataPin++)
 	{
 		/*	Configure the data pins to be an output .
-		*	(Note): The order where EEPROM output enable is disabled when setEEPROMAddressAndOutputEnable() called first before configuring the pins mode to output,
+		*	(Note): The order where EEPROM output enable is disabled when setEEPROMAddressAndOutputEnable() is called first before configuring the pins mode to output,
 		*	to avoid the EEPROM and the Arduino writting to the data lines at the same time resulting in contention .
 		*/
 		pinMode(dataPin, OUTPUT);
@@ -105,6 +105,41 @@ void writeEEPROM(uint16_t address, byte data)
 	delayMicroseconds(EEPROM_WRITE_CYCLE_DELAY);   
 }
 
+/*
+*	Read a byte of data from EEPROM at the specified address
+*/
+
+byte readEEPROM(uint16_t address)
+{
+	for(int dataPin = EEPROM_D0_PIN; dataPin <= EEPROM_D7_PIN; dataPin++)
+	{
+		/*	Configure the data pins to be an input .
+		*	(Note): The order where configuring the pins mode to input before EEPROM output is enabled when setEEPROMAddressAndOutputEnable() is called,
+		*	to avoid the EEPROM and the Arduino writting to the data lines at the same time resulting in contention .
+		*/
+		pinMode(dataPin, INPUT);
+	}
+   
+	/*
+	*	Set the address where the data will be read from .
+	*	And enable the EEPROM output ( we are reading data from it ),
+	*	This needs to be called after the Arduino data pins are configured to be an input, 
+	*	otherwise it would result in contention on the data lines .
+	*/
+	setEEPROMAddressAndOutputEnable(address, true);
+   
+   // Initialize the data output
+	byte data = 0;
+   
+	/* Read the data from the data pins */
+	for(int dataPin = EEPROM_D7_PIN; dataPin >= EEPROM_D0_PIN; dataPin--)
+	{
+		// Shift the data 1-bit to the left and then read the pin data to the LSB
+		data = ( data << 1 ) + digitalRead(dataPin); 
+	}
+   
+	return data;
+}
 
 
 /*
