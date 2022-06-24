@@ -19,6 +19,7 @@
 #define EEPROM_WRITE_CYCLE_DELAY 5000
 
 
+
 /* 
 *	Write the 15-bit for the EEPROM address and 1-bit for the EEPROM output enable status to the EEPROM indirectly through the two 8-bit shift registers .
 *	The 16 bits are written serially to two (8-BIT SHIFT REGISTER WITH 8-BIT OUTPUT REGISTER),
@@ -105,10 +106,11 @@ void writeEEPROM(uint16_t address, byte data)
 	delayMicroseconds(EEPROM_WRITE_CYCLE_DELAY);   
 }
 
+
+
 /*
 *	Read a byte of data from EEPROM at the specified address
 */
-
 byte readEEPROM(uint16_t address)
 {
 	for(int dataPin = EEPROM_D0_PIN; dataPin <= EEPROM_D7_PIN; dataPin++)
@@ -142,6 +144,21 @@ byte readEEPROM(uint16_t address)
 }
 
 
+
+/*
+*  Override EEPROM content in the given address range [ startAddress:endAddress ] with the specified value
+*/
+void eraseEEPROM(uint16_t startAddress, uint16_t endAddress, byte value)
+{
+	for(uint16_t address = startAddress; address <= endAddress; address++)
+	{
+		// Override the current value at the address with the specified value
+		writeEEPROM(address, value);
+	}
+}
+
+
+
 /*
 * 	Initialize and configure the pins to behave as an output 
 */
@@ -164,10 +181,13 @@ void initPins()
   	pinMode(WRITE_EN_PIN, OUTPUT);
 }
 
+
+
 void setup ()
 {
 	initPins();
 }
+
 
 void loop()
 {
