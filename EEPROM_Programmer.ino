@@ -109,6 +109,20 @@ void writeEEPROM(uint16_t address, byte data)
 
 
 /*
+*  Override EEPROM content in the given address range [ startAddress:endAddress ] with the specified value
+*/
+void eraseEEPROM(uint16_t startAddress, uint16_t endAddress, byte value)
+{
+	for(uint16_t address = startAddress; address <= endAddress; address++)
+	{
+		// Override the current value at the address with the specified value
+		writeEEPROM(address, value);
+	}
+}
+
+
+
+/*
 *	Read a byte of data from EEPROM at the specified address
 */
 byte readEEPROM(uint16_t address)
@@ -146,15 +160,63 @@ byte readEEPROM(uint16_t address)
 
 
 /*
-*  Override EEPROM content in the given address range [ startAddress:endAddress ] with the specified value
+*	Print the content of the EEPROM at the specified address range to the serial output .
+*	The data is printed in 16-byte blocks .
 */
-void eraseEEPROM(uint16_t startAddress, uint16_t endAddress, byte value)
+void serialPrintEEPROMContent(uint16_t startAddress, uint16_t endAddress)
 {
+	// Buffer for 16 bytes of data
+	byte dataBuffer[16];
+	// Keep track of the number of bytes read before being serially outputted
+	uint8_t dataBufferIndex = 0;  // Range [0: 15]
+
+
 	for(uint16_t address = startAddress; address <= endAddress; address++)
 	{
-		// Override the current value at the address with the specified value
-		writeEEPROM(address, value);
-	}
+		// Read a byte of data into the data buffer
+		dataBuffer[dataBufferIndex] = readEEPROM(address);
+
+		/*
+		*	If we have 16 bytes of data in the data buffer or the last address reached,
+		*	then write the data into the output buffer in a specific format . 
+		*/
+		if(dataBufferIndex == 15 || address == endAddress)
+		{
+			char outputBuffer[80];
+			// Pointer to the first item of the output buffer
+			char* outputBufferPtr = &outputBuffer[0];
+
+			// Write the first address of the data into the output buffer
+			outputBufferPtr += sprintf(outputBuffer, "%03x:    ", (address - dataBufferIndex));
+
+			/* Write the data into the output buffer */
+			for(uint8_t i = 0; i <= dataBufferIndex; i++)
+			{
+				// Byte format
+				const char* format = "%02x ";
+
+				// Add spacing after 8 bytes of data
+				if(i == 7)
+				{
+					format =  "%02x   ";
+				}
+				
+				// Write a byte into the output buffer
+				outputBufferPtr += sprintf(outputBufferPtr, format, dataBuffer[i]);
+				
+			}
+			
+			// Serial output the output buffer
+			Serial.println(outputBuffer);
+			// Reset the index
+			dataBufferIndex = 0;
+			// Continue to avoid incrementing the dataBufferIndex
+			continue;
+		}
+
+		dataBufferIndex++;
+    }
+      
 }
 
 
