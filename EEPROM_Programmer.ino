@@ -165,6 +165,15 @@ byte readEEPROM(uint16_t address)
 */
 void serialPrintEEPROMContent(uint16_t startAddress, uint16_t endAddress)
 {
+	// Check if the start and end addresses don't exceed the maximum EEPROM address
+	if(startAddress >= EEPROM_ADDRESSES_LENGTH || endAddress >= EEPROM_ADDRESSES_LENGTH)
+	{
+		Serial.print("[!] Address exceeded the maximum address, maximum address is: ");
+		// The maximum EEPROM address
+		Serial.println(EEPROM_ADDRESSES_LENGTH - 1);
+		// Exit the function
+		return;
+	}
 	// Buffer for 16 bytes of data
 	byte dataBuffer[16];
 	// Keep track of the number of bytes read before being serially outputted
