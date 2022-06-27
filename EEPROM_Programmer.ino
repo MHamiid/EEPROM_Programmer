@@ -171,6 +171,11 @@ void serialPrintEEPROMContent(uint16_t startAddress, uint16_t endAddress)
 		Serial.print("[!] Address exceeded the maximum address, maximum address is: ");
 		// The maximum EEPROM address
 		Serial.println(EEPROM_ADDRESSES_LENGTH - 1);
+		Serial.print("\t \t \t \t \tYour input:   Start Address  ");
+		Serial.print(startAddress);
+		Serial.print(", End Address  ");
+		Serial.println(endAddress);
+
 		// Exit the function
 		return;
 	}
