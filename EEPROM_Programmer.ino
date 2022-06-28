@@ -140,7 +140,7 @@ void eraseEEPROM(uint16_t startAddress, uint16_t endAddress, byte value)
 /*
 *	Read a byte of data from EEPROM at the specified address
 */
-byte readEEPROM(uint16_t address)
+byte readEEPROMByte(uint16_t address)
 {
 	for(int dataPin = EEPROM_D0_PIN; dataPin <= EEPROM_D7_PIN; dataPin++)
 	{
@@ -203,7 +203,7 @@ void serialPrintEEPROMContent(uint16_t startAddress, uint16_t endAddress)
 	for(uint16_t address = startAddress; address <= endAddress; address++)
 	{
 		// Read a byte of data into the data buffer
-		dataBuffer[dataBufferIndex] = readEEPROM(address);
+		dataBuffer[dataBufferIndex] = readEEPROMByte(address);
 
 		/*
 		*	If we have 16 bytes of data in the data buffer or the last address reached,
