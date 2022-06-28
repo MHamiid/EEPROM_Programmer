@@ -68,7 +68,7 @@ void setEEPROMAddressAndOutputEnable(uint16_t address, bool EEPROMOutputEnable)
 /*
 *	Write a byte to the EEPROM at the specified address
 */
-void writeEEPROM(uint16_t address, byte data)
+void writeEEPROMByte(uint16_t address, byte data)
 {
    /*
    *	Set the address where the data will be written in .
@@ -109,6 +109,21 @@ void writeEEPROM(uint16_t address, byte data)
 
 
 /*
+*	Write a the given byte array to the EEPROM starting from the specified address
+*/
+void writeEEPROM(byte* dataArray, uint16_t dataArraySize, uint16_t address)
+{ 
+   for(uint16_t index = 0; index < dataArraySize; index++)
+   {
+	   writeEEPROMByte(address, dataArray[index]);
+	   // Increment to the next address
+	   address++;
+   } 
+}
+
+
+
+/*
 *  Override EEPROM content in the given address range [ startAddress:endAddress ] with the specified value
 */
 void eraseEEPROM(uint16_t startAddress, uint16_t endAddress, byte value)
@@ -116,7 +131,7 @@ void eraseEEPROM(uint16_t startAddress, uint16_t endAddress, byte value)
 	for(uint16_t address = startAddress; address <= endAddress; address++)
 	{
 		// Override the current value at the address with the specified value
-		writeEEPROM(address, value);
+		writeEEPROMByte(address, value);
 	}
 }
 
