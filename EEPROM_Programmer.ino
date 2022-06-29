@@ -216,7 +216,7 @@ void serialPrintEEPROMContent(uint16_t startAddress, uint16_t endAddress)
 			char* outputBufferPtr = &outputBuffer[0];
 
 			// Write the first address of the data into the output buffer
-			outputBufferPtr += sprintf(outputBuffer, "%03x:    ", (address - dataBufferIndex));
+			outputBufferPtr += sprintf(outputBuffer, "%04x:    ", (address - dataBufferIndex));
 
 			/* Write the data into the output buffer */
 			for(uint8_t i = 0; i <= dataBufferIndex; i++)
