@@ -194,6 +194,13 @@ void serialPrintEEPROMContent(uint16_t startAddress, uint16_t endAddress)
 		// Exit the function
 		return;
 	}
+
+	Serial.println("[!] Printing EEPROM content");
+	Serial.print("\t \t \t \t \tStart Address  ");
+	Serial.print(startAddress);
+	Serial.print(", End Address  ");
+	Serial.println(endAddress);
+
 	// Buffer for 16 bytes of data
 	byte dataBuffer[16];
 	// Keep track of the number of bytes read before being serially outputted
