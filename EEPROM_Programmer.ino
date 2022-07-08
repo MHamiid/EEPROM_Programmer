@@ -109,7 +109,7 @@ void writeEEPROMByte(uint16_t address, byte data)
 
 
 /*
-*	Write a the given byte array to the EEPROM starting from the specified address
+*	Write the given byte array to the EEPROM starting from the specified address
 */
 void writeEEPROM(byte* dataArray, uint16_t dataArraySize, uint16_t address)
 { 
