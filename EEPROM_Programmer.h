@@ -1,3 +1,6 @@
+#ifndef __EEPROM_PROGRAMMER_H__
+#define __EEPROM_PROGRAMMER_H__
+
 #include <Arduino.h>
 
 
@@ -110,3 +113,5 @@ byte readEEPROMByte(uint16_t address);
  * @return void
  */
 void serialPrintEEPROMContent(uint16_t startAddress, uint16_t endAddress);
+
+#endif /* __EEPROM_PROGRAMMER_H__ */
