@@ -1,5 +1,5 @@
 # EEPROM_Programmer
-EEPROM Programmer using Arduino
+EEPROM Programmer using Arduino with 8-bit data lines and maximum 15-bit address lines
 
 ## Components
 - Arduino Nano
